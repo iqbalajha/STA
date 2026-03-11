@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STA — Infinity Solidarity</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0a1628;
+    --blue: #1a3a6b;
+    --accent: #2e6be6;
+    --sky: #c8dbf8;
+    --white: #f8faff;
+    --muted: rgba(248,250,255,0.5);
+    --glass: rgba(255,255,255,0.06);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── AMBIENT GLOW ── */
+  .glow-1 {
+    position: fixed;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(46,107,230,0.18) 0%, transparent 70%);
+    top: -200px; right: -200px;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift1 18s ease-in-out infinite alternate;
+  }
+  .glow-2 {
+    position: fixed;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(46,107,230,0.12) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift2 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(-60px, 80px); } }
+  @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(60px, -60px); } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(10,22,40,0.6);
+    animation: fadeDown 0.8s ease both;
+  }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border: 1px solid rgba(46,107,230,0.5);
+    border-radius: 2px;
+    color: var(--sky);
+    text-decoration: none;
+    transition: all 0.3s;
+    background: transparent;
+  }
+  .nav-cta:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 140px 60px 80px;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(46,107,230,0.3);
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--sky);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 520px;
+    margin-bottom: 52px;
+    font-weight: 300;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--white);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(46,107,230,0.4); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    transition: color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost svg { transition: transform 0.3s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  /* hero year tag */
+  .hero-year {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9rem;
+    font-weight: 300;
+    color: rgba(46,107,230,0.08);
+    line-height: 1;
+    user-select: none;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+
+  /* ── DIVIDER ── */
+  .divider {
+    position: relative; z-index: 1;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 30%, rgba(46,107,230,0.3) 50%, rgba(255,255,255,0.1) 70%, transparent);
+    margin: 0 60px;
+    width: calc(100% - 120px);
+  }
+
+  /* ── STATS ── */
+  .stats {
+    position: relative; z-index: 1;
+    padding: 70px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .stat-item {
+    padding: 48px 40px;
+    background: var(--navy);
+    transition: background 0.3s;
+  }
+  .stat-item:hover { background: rgba(46,107,230,0.08); }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    position: relative; z-index: 1;
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--sky); }
+
+  .section-body {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .about-visual {
+    position: relative;
+    aspect-ratio: 4/5;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(46,107,230,0.15) 0%, rgba(10,22,40,0.8) 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .about-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px);
+  }
+  .about-visual-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    font-weight: 300;
+    color: rgba(46,107,230,0.25);
+    position: relative;
+    z-index: 1;
+  }
+  .about-badge {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 16px 24px;
+    border-radius: 2px;
+    z-index: 2;
+  }
+  .about-badge-year {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .about-badge-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+
+  /* ── PROGRAMS ── */
+  .programs {
+    position: relative; z-index: 1;
+    padding: 120px 60px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .programs-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 70px;
+  }
+
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .program-card {
+    background: var(--navy);
+    padding: 48px 36px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .program-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .program-card:hover { background: rgba(46,107,230,0.06); }
+  .program-card:hover::before { transform: scaleX(1); }
+
+  .program-icon {
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .program-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .program-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .program-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    position: relative; z-index: 1;
+    padding: 120px 60px;
+  }
+
+  .testi-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .testi-card {
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 40px 32px;
+    border-radius: 2px;
+    background: var(--glass);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .testi-card:hover {
+    border-color: rgba(46,107,230,0.3);
+    transform: translateY(-4px);
+  }
+  .testi-card::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6rem;
+    color: rgba(46,107,230,0.15);
+    position: absolute;
+    top: 10px; left: 24px;
+    line-height: 1;
+  }
+
+  .testi-text {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: rgba(248,250,255,0.7);
+    font-weight: 300;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .testi-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .testi-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .testi-role {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    position: relative; z-index: 1;
+    padding: 120px 60px;
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(46,107,230,0.08) 50%, transparent);
+  }
+
+  .cta-section .section-label {
+    justify-content: center;
+  }
+  .cta-section .section-label::after { display: none; }
+  .cta-section .section-label::before {
+    content: '';
+    flex: 1;
+    max-width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .cta-title em { font-style: italic; color: var(--sky); }
+
+  .cta-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 52px;
+    line-height: 1.75;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: var(--white);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .btn-wa:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,211,102,0.3); }
+
+  .btn-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--white);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.3s;
+  }
+  .btn-ig:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    padding: 48px 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .footer-logo span { color: var(--accent); }
+
+  .footer-copy {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-slogan {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(200,219,248,0.4);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .hero-year { display: none; }
+    .stats { grid-template-columns: 1fr; padding: 0; }
+    .about { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+    .about-visual { aspect-ratio: 16/9; }
+    .programs { padding: 80px 24px; }
+    .programs-header { grid-template-columns: 1fr; gap: 24px; }
+    .programs-grid { grid-template-columns: 1fr; }
+    .testimonials { padding: 80px 24px; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .cta-section { padding: 80px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 16px; text-align: center; }
+    .divider { margin: 0 24px; width: calc(100% - 48px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ST<span>A</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">Tentang</a></li>
+    <li><a href="#programs">Program</a></li>
+    <li><a href="#testimonials">Testimoni</a></li>
+  </ul>
+  <a href="#" class="nav-cta" onclick="bukaModal(); return false;">Gabung Sekarang</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Est. 2019 · Pondok Pesantren</div>
+    <h1 class="hero-title">
+      Solidarity<br>
+      <em>Tanpa Batas</em>
+    </h1>
+    <p class="hero-sub">
+      STA — komunitas pondok yang lahir dari kebersamaan, tumbuh dalam solidaritas, dan bergerak menuju masa depan yang lebih baik bersama.
+    </p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary" onclick="bukaModal(); return false;">
+        Gabung Komunitas
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#about" class="btn-ghost">
+        Pelajari Lebih
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-year">2019</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STATS -->
+<section class="stats reveal">
+  <div class="stat-item">
+    <div class="stat-num">5<span>+</span></div>
+    <div class="stat-label">Tahun Bersama</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Solidaritas</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">1<span>pondok</span></div>
+    <div class="stat-label">Satu Keluarga</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="reveal">
+    <div class="section-label">Tentang Kami</div>
+    <h2 class="section-title">Lahir dari<br><em>Kebersamaan</em></h2>
+    <p class="section-body" style="margin-bottom:24px;">
+      STA didirikan pada tahun 2019 dengan satu visi sederhana: membangun ikatan yang tidak pernah putus di antara para santri. Lebih dari sekadar komunitas, STA adalah rumah kedua yang selalu terbuka.
+    </p>
+    <p class="section-body">
+      Dengan semangat <em style="color:var(--sky)">infinity solidarity</em>, kami percaya bahwa kekuatan terbesar ada pada kebersamaan — saling mendukung, saling menguatkan, dan tumbuh bersama tanpa terkecuali.
+    </p>
+  </div>
+  <div class="about-visual reveal">
+    <div class="about-visual-text">STA</div>
+    <div class="about-badge">
+      <div class="about-badge-year">Slogan</div>
+      <div class="about-badge-val">Infinity Solidarity</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs" id="programs">
+  <div class="programs-header reveal">
+    <div>
+      <div class="section-label">Program</div>
+      <h2 class="section-title">Apa yang<br><em>Kami Lakukan</em></h2>
+    </div>
+    <p class="section-body">
+      Berbagai kegiatan dirancang untuk mempererat tali persaudaraan dan mengembangkan potensi setiap anggota komunitas STA.
+    </p>
+  </div>
+  <div class="programs-grid reveal">
+    <div class="program-card">
+      <span class="program-icon">🤝</span>
+      <div class="program-num">01</div>
+      <div class="program-title">Kajian Bersama</div>
+      <p class="program-desc">Mendalami ilmu agama dan pengetahuan umum secara rutin dalam suasana yang hangat dan inklusif.</p>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">⚽</span>
+      <div class="program-num">02</div>
+      <div class="program-title">Kegiatan Olahraga</div>
+      <p class="program-desc">Membangun fisik dan semangat tim melalui olahraga bersama yang menyehatkan dan menyenangkan.</p>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">🌟</span>
+      <div class="program-num">03</div>
+      <div class="program-title">Pengembangan Diri</div>
+      <p class="program-desc">Workshop dan pelatihan untuk mengasah skill dan mempersiapkan anggota menghadapi tantangan masa depan.</p>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">🎉</span>
+      <div class="program-num">04</div>
+      <div class="program-title">Perayaan Komunitas</div>
+      <p class="program-desc">Merayakan setiap momen penting bersama — dari ulang tahun hingga pencapaian komunitas.</p>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">💡</span>
+      <div class="program-num">05</div>
+      <div class="program-title">Diskusi & Ide</div>
+      <p class="program-desc">Forum terbuka untuk berbagi gagasan, berdiskusi, dan berkolaborasi dalam berbagai bidang.</p>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">❤️</span>
+      <div class="program-num">06</div>
+      <div class="program-title">Bakti Sosial</div>
+      <p class="program-desc">Berkontribusi nyata untuk masyarakat sekitar sebagai wujud solidaritas yang melampaui batas komunitas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testi-header reveal">
+    <div class="section-label" style="justify-content:center;">
+      <span>Suara Anggota</span>
+    </div>
+    <h2 class="section-title" style="font-size:clamp(2rem,4vw,3rem);">Apa Kata <em>Mereka</em></h2>
+  </div>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <p class="testi-text">STA bukan hanya komunitas biasa. Di sini gua nemu saudara-saudara yang beneran peduli dan selalu ada di setiap keadaan.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name">Ahmad</div>
+          <div class="testi-role">Anggota sejak 2019</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-text">Infinity solidarity bukan cuma slogan, itu benar-benar apa yang gua rasain setiap hari bersama STA. Solidaritasnya nyata banget.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Raka</div>
+          <div class="testi-role">Anggota sejak 2020</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-text">Bergabung dengan STA adalah salah satu keputusan terbaik gua. Banyak pelajaran hidup yang gua dapat dari komunitas ini.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">F</div>
+        <div>
+          <div class="testi-name">Faris</div>
+          <div class="testi-role">Anggota sejak 2021</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <div class="section-label">Bergabung</div>
+    <h2 class="cta-title">Siap Jadi<br>Bagian dari <em>STA?</em></h2>
+    <p class="cta-sub">Jadilah bagian dari keluarga besar STA. Bersama kita lebih kuat — infinity solidarity.</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn-wa" onclick="bukaModal(); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://instagram.com/iqyazy" class="btn-ig">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ST<span>A</span></div>
+  <div class="footer-slogan">infinity solidarity</div>
+  <div class="footer-copy">© 2019–2025 STA Community</div>
+</footer>
+
+<!-- MODAL FORM DAFTAR -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="tutupModal()">✕</button>
+
+    <div class="modal-badge">Pendaftaran Anggota</div>
+    <h2 class="modal-title">Gabung <em>STA</em></h2>
+    <p class="modal-sub">Isi data diri lo dulu ya, biar kami bisa kenalan! 👋</p>
+
+    <div id="formStep">
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap</label>
+        <input type="text" id="inputNama" class="form-input" placeholder="Masukkan nama lo...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nomor WhatsApp</label>
+        <input type="tel" id="inputWA" class="form-input" placeholder="Contoh: 08123456789">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username Instagram</label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">@</span>
+          <input type="text" id="inputIG" class="form-input with-prefix" placeholder="username_ig">
+        </div>
+      </div>
+      <button class="btn-submit" onclick="kirimDaftar()">
+        Kirim & Gabung via WhatsApp
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <div id="successStep" style="display:none; text-align:center; padding: 20px 0;">
+      <div style="font-size:3rem; margin-bottom:16px;">🎉</div>
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; margin-bottom:12px;">Selamat Datang!</h3>
+      <p style="color:var(--muted); font-size:0.9rem; line-height:1.7;">Lo akan diarahkan ke WhatsApp sekarang. Sampai jumpa di komunitas STA!</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 12, 25, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .modal-box {
+    background: #0d1e38;
+    border: 1px solid rgba(46,107,230,0.25);
+    border-radius: 4px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes modalIn {
+    from { opacity:0; transform: translateY(30px) scale(0.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+
+  .modal-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .modal-title em { font-style: italic; color: var(--sky); }
+
+  .modal-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .form-input:focus {
+    border-color: var(--accent);
+    background: rgba(46,107,230,0.08);
+  }
+  .form-input::placeholder { color: rgba(248,250,255,0.25); }
+  .form-input.with-prefix { padding-left: 36px; }
+
+  .input-prefix-wrap {
+    position: relative;
+  }
+  .input-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 0.95rem;
+    pointer-events: none;
+  }
+
+  .form-input.error { border-color: #e25c5c; }
+
+  .btn-submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 16px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s;
+  }
+  .btn-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(46,107,230,0.4);
+  }
+
+  @media (max-width: 480px) {
+    .modal-box { padding: 36px 24px; }
+    .modal-title { font-size: 2rem; }
+  }
+</style>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Modal
+  function bukaModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => overlay.classList.add('active'), 10);
+    document.body.style.overflow = 'hidden';
+  }
+
+  function tutupModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+      // Reset form
+      document.getElementById('inputNama').value = '';
+      document.getElementById('inputWA').value = '';
+      document.getElementById('inputIG').value = '';
+      document.getElementById('formStep').style.display = 'block';
+      document.getElementById('successStep').style.display = 'none';
+      document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+    }, 300);
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) tutupModal();
+  }
+
+  function kirimDaftar() {
+    const nama = document.getElementById('inputNama').value.trim();
+    const wa   = document.getElementById('inputWA').value.trim();
+    const ig   = document.getElementById('inputIG').value.trim();
+
+    let valid = true;
+    ['inputNama','inputWA','inputIG'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+    });
+
+    if (!nama) { document.getElementById('inputNama').classList.add('error'); valid = false; }
+    if (!wa)   { document.getElementById('inputWA').classList.add('error');   valid = false; }
+    if (!ig)   { document.getElementById('inputIG').classList.add('error');   valid = false; }
+
+    if (!valid) return;
+
+    // Tampilkan success
+    document.getElementById('formStep').style.display = 'none';
+    document.getElementById('successStep').style.display = 'block';
+
+    // Kirim ke WA dengan data pendaftar
+    const pesan = `Halo kak! Saya ingin gabung komunitas STA 🙌%0A%0ANama: ${encodeURIComponent(nama)}%0ANo WA: ${encodeURIComponent(wa)}%0AInstagram: @${encodeURIComponent(ig)}%0A%0AInfinity Solidarity! ✊`;
+
+    setTimeout(() => {
+      tutupModal();
+      window.location.href = `https://wa.me/6285166406533?text=${pesan}`;
+    }, 1500);
+  }
+</script>
+</body>
+</html>
